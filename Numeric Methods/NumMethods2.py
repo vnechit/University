@@ -47,8 +47,7 @@ def inverse_matrix(a):
     a[1][0], a[0][1] = a[0][1], a[1][0]
 
 
-def method(x, y):
-    eps = 0.001
+def method(x, y, eps):
     count = 0
     a = numpy.zeros((2, 2))
     px, py, dx, dy = 0, 0, 0, 0
@@ -79,44 +78,54 @@ def method(x, y):
             return None, None, None
 
         if flag:
-            return x, y, count
+            nevyazka = [math.cos(y-1)+x-0.8, y-math.cos(x)-2]
+            return x, y, count, nevyazka
 
 
 # обработчик нажатия кнопки
 def button_clicked():
     x = x_input.get()
     y = y_input.get()
-    if x == '' and y == '':
+    eps = eps_input.get()
+    if x == '' or y == '':
         messagebox.showerror("Некорректные данные", "Введите данные еще раз")
         x_input.delete(0, END)
         y_input.delete(0, END)
+        eps_input.delete(0, END)
         return
-    x, y, count = method(float(x), float(y))
+    x, y, count, nevyazka = method(float(x), float(y), float(eps))
     if not (x is None and y is None and count is None):
-        messagebox.showinfo("Ответ", f'x = {x}\n y = {y}\n steps = {count}')
+        messagebox.showinfo("Ответ", f'x = {x}\n y = {y}\n steps = {count}\nМатрица невязки:\n{nevyazka[0]}\n{nevyazka[1]}')
     x_input.delete(0, END)
     y_input.delete(0, END)
+    eps_input.delete(0, END)
 
 
 if __name__ == '__main__':
 
     root = Tk()
     root.title("Решение нелинейных уравнений методом Ньютона")
-    root.geometry(f'300x100+{root.winfo_screenwidth()//2-150}+{root.winfo_screenheight()//2-50}')
+    root.geometry(f'250x130+{root.winfo_screenwidth()//2-125}+{root.winfo_screenheight()//2-65}')
 
-    f_top = Frame(root)
-    f_bottom = Frame(root)
-    x_label = Label(f_top, text="x = ")
-    x_input = Entry(f_top)
-    y_label = Label(f_bottom, text="y = ")
-    y_input = Entry(f_bottom)
+    x_label = Label(text="x = ")
+    x_input = Entry()
+
+    y_label = Label(text="y = ")
+    y_input = Entry()
+
+    eps_label = Label(text="eps = ")
+    eps_input = Entry()
+
     btn = Button(text="Решить", command=button_clicked)
-    f_top.pack()
-    f_bottom.pack()
-    x_label.pack(side=LEFT)
-    y_label.pack(side=LEFT)
-    x_input.pack(side=RIGHT)
-    y_input.pack(side=RIGHT)
-    btn.pack()
+
+    x_label.grid(column=0, row=0)
+    y_label.grid(column=0, row=1)
+    eps_label.grid(column=0, row=2)
+
+    x_input.grid(column=1, row=0)
+    y_input.grid(column=1, row=1)
+    eps_input.grid(column=1, row=2)
+
+    btn.grid(column=1, row=3)
 
     root.mainloop()
