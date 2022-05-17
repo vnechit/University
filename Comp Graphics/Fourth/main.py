@@ -1,6 +1,9 @@
 import math
-
 import matplotlib.pyplot as plt
+
+from tkinter import *
+from tkinter import messagebox
+from tkinter import simpledialog
 
 intersect = True
 
@@ -30,11 +33,11 @@ def And(A, B):
     return answer
 
 
-def CK():
-    x1, y1 = map(int, input('Координаты левого нижнего угла окна').split())
-    x2, y2 = map(int, input('Координаты правого верхнего угла окна').split())
-    a = [int(x) for x in input('Точка A').split()]
-    b = [int(x) for x in input('Точка B').split()]
+def CK(PointA, PointB, PointC, PointD):
+    x1, y1 = map(int, PointA.split())
+    x2, y2 = map(int, PointB.split())
+    a = [int(x) for x in PointC.split()]
+    b = [int(x) for x in PointD.split()]
     X = [x1, x1, x2, x2, x1]
     Y = [y1, y2, y2, y1, y1]
     plt.plot(X, Y)
@@ -119,11 +122,11 @@ def CP_calc(a, b, x1, x2, y1, y2, X_A, Y_A):
         CP_calc(c, b, x1, x2, y1, y2, X_A, Y_A)
 
 
-def CP():
-    x1, y1 = map(int, input('Координаты левого нижнего угла окна').split())
-    x2, y2 = map(int, input('Координаты правого верхнего угла окна').split())
-    a = [int(x) for x in input('Точка A').split()]
-    b = [int(x) for x in input('Точка B').split()]
+def CP(PointA, PointB, PointC, PointD):
+    x1, y1 = map(int, PointA.split())
+    x2, y2 = map(int, PointB.split())
+    a = [int(x) for x in PointC.split()]
+    b = [int(x) for x in PointD.split()]
     X = [x1, x1, x2, x2, x1]
     Y = [y1, y2, y2, y1, y1]
     plt.plot(X, Y)
@@ -136,13 +139,14 @@ def CP():
     plt.show()
 
 
-def CB():
-    n = int(input("Введите количество вершин многоугольника: "))
-    # Многоугольник
+def CB(N, PointA, PointB, sides):
+    n = int(N)
+    # Многоугольник sides,
     X = []
     Y = []
-    for i in range(n):
-        x, y = map(int, input(f'Вершина {i + 1}: ').split())
+    print(sides)
+    for i in sides:
+        x, y = map(int, i.split())
         X.append(x)
         Y.append(y)
 
@@ -155,8 +159,8 @@ def CB():
 
     X.append(X[0])
     Y.append(Y[0])
-    p1 = [int(x) for x in input('Точка P1: ').split()]
-    p2 = [int(x) for x in input('Точка P2: ').split()]
+    p1 = [int(x) for x in PointA.split()]
+    p2 = [int(x) for x in PointB.split()]
 
     plt.plot(X, Y, 'black')
     plt.plot([p1[0], p2[0]], [p1[1], p2[1]], 'green')
@@ -255,7 +259,85 @@ def CB():
     plt.show()
 
 
+def button_clicked():
+    if choice.get() == 1:
+        pointA = simpledialog.askstring(title="Введите данные", prompt='Координаты левого нижнего угла окна: ')
+        if pointA is None:
+            root.destroy()
+            return
+        pointB = simpledialog.askstring(title="Введите данные", prompt='Координаты правого верхнего угла окна:')
+        if pointB is None:
+            root.destroy()
+            return
+        pointC = simpledialog.askstring(title="Введите данные", prompt='Точка A: ')
+        if pointC is None:
+            root.destroy()
+            return
+        pointD = simpledialog.askstring(title="Введите данные", prompt='Точка B: ')
+        if pointD is None:
+            root.destroy()
+            return
+        CK(pointA, pointB, pointC, pointD)
+    elif choice.get() == 2:
+        pointA = simpledialog.askstring(title="Введите данные", prompt='Координаты левого нижнего угла окна: ')
+        if pointA is None:
+            root.destroy()
+            return
+        pointB = simpledialog.askstring(title="Введите данные", prompt='Координаты правого верхнего угла окна:')
+        if pointB is None:
+            root.destroy()
+            return
+        pointC = simpledialog.askstring(title="Введите данные", prompt='Точка A: ')
+        if pointC is None:
+            root.destroy()
+            return
+        pointD = simpledialog.askstring(title="Введите данные", prompt='Точка B: ')
+        if pointD is None:
+            root.destroy()
+            return
+        CP(pointA, pointB, pointC, pointD)
+    elif choice.get() == 3:
+        n = simpledialog.askstring(title="Введите данные", prompt='Введите количество вершин многоугольника: ')
+        if n is None:
+            root.destroy()
+            return
+        sides = []
+        for i in range(int(n)):
+            point = simpledialog.askstring(title="Введите данные", prompt=f'Вершина {i + 1}: ')
+            if point is None:
+                root.destroy()
+                return
+            sides.append(point)
+        pointA = simpledialog.askstring(title="Введите данные", prompt='Точка P1: ')
+        if pointA is None:
+            root.destroy()
+            return
+        pointB = simpledialog.askstring(title="Введите данные", prompt='Точка P2: ')
+        if pointB is None:
+            root.destroy()
+            return
+        CB(n, pointA, pointB, sides)
+    else:
+        messagebox.showinfo("Неправильный выбор", "Выберите задачу")
+
+
 if __name__ == '__main__':
-    # CK()
-    CP()
-    # CB()
+    root = Tk()
+    root.title("Отсечение отрезка многоугольником")
+    root.geometry(f'250x120+{root.winfo_screenwidth()//2-125}+{root.winfo_screenheight()//2-60}')
+
+    choice = IntVar()
+    choice.set(0)
+    lineCheckButton = Radiobutton(text="Алгоритм Цируса-Бека", variable=choice, value=1)
+    lineCheckButton.grid(row=0, column=0, sticky=W)
+
+    circleCheckButton = Radiobutton(text="Алгоритм Сазерленда-Коэна", variable=choice, value=2)
+    circleCheckButton.grid(row=1, column=0, sticky=W)
+
+    circleCheckButton = Radiobutton(text="Алгоритм средней точки", variable=choice, value=3)
+    circleCheckButton.grid(row=2, column=0, sticky=W)
+
+    btn = Button(text="Решить", command=button_clicked)
+    btn.grid(row=3, column=0, sticky=W)
+
+    root.mainloop()
