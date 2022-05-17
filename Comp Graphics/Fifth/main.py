@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+from tkinter import *
+from tkinter import messagebox
+from tkinter import simpledialog
 
 
 def moveX(a, n):
@@ -106,25 +109,19 @@ def line(a, b):
         yEnd.append(i[1])
 
     return xEnd, yEnd
-    ###############################Вывод###############################
-    # fig = plt.figure(1)
-    # ax = fig.gca()
-    # locatorX = matplotlib.ticker.MultipleLocator(base=1)
-    # locatorY = matplotlib.ticker.MultipleLocator(base=1)
-    # ax.xaxis.set_major_locator(locatorX)
-    # ax.yaxis.set_major_locator(locatorY)
-    # ax.grid()
-    # ax.plot(A, B)
-    # plt.scatter(xEnd, yEnd, c='green')
-    # plt.show()
 
 
 def count_to_dict(lst):
     return {k: lst.count(k) for k in lst}
 
 
-if __name__ == '__main__':
-    n = int(input('Количество вершин: '))
+def button_clicked():
+    n = n_entry.get()
+    if n == '':
+        messagebox.showerror("Некорректные данные", "Введите данные еще раз")
+        n_entry.delete(0, END)
+        return
+    n = int(n)
     X = []
     N = 100
     for i in range(N):
@@ -133,8 +130,12 @@ if __name__ == '__main__':
     C = ['g' for i in range(N)] * N
     x = []
     y = []
-    for i in range(n):
-        point = input('Координаты вершины: ').split()
+    for i in range(int(n)):
+        point = simpledialog.askstring(title="Введите данные", prompt=f'Вершина {i + 1}: ')
+        if point is None:
+            root.destroy()
+            return
+        point = point.split()
         x.append(int(point[0]))
         y.append(int(point[1]))
     centreX = min(x) + ((max(x) - min(x)) // 2)
@@ -147,7 +148,6 @@ if __name__ == '__main__':
     for i in range(n):
         a = [x[i], y[i]]
         b = [x[i + 1], y[i + 1]]
-        # if a[0] <= centreX and b[0] <= centreX:
         xEnd, yEnd = line(a, b)
         xA.extend(xEnd)
         yA.extend(yEnd)
@@ -166,16 +166,6 @@ if __name__ == '__main__':
         for j in range(len(yEnd)):
             startX = min(xEnd[j], centreX)
             endX = max(xEnd[j], centreX)
-            # if endX < 0:
-            #     pass
-            #     # endX -= 1
-            # else:
-            #     endX += 1
-            # if startX < 0:
-            #     pass
-            #     # startX -= 1
-            # else:
-            #     startX += 1
             for currentX in range(startX, endX):
                 try:
                     ind = t.index((currentX, yEnd[j]))
@@ -185,23 +175,31 @@ if __name__ == '__main__':
     for point in t:
         xA.append(point[0])
         yA.append(point[1])
-
-    # for ks in range(len(xA)):
-    #     t.append((xA[ks], yA[ks]))
-    # print(t)
-    # tmp = count_to_dict(t)
-    # for point in tmp:
-    #     if tmp[point] % 2 == 0:
-    #         try:
-    #             while True:
-    #                 t.remove(point)
-    #         except ValueError:
-    #             pass
-    # xA = []
-    # yA = []
-    # for i in t:
-    #     xA.append(i[0])
-    #     yA.append(i[1])
     plt.scatter(X, Y, c='g')
     plt.scatter(xA, yA, c='r')
     plt.show()
+    messagebox.showinfo("Решение построено", "Готово!")
+    n_entry.delete(0, END)
+
+
+def button_clicked1(event):
+    button_clicked()
+
+
+if __name__ == '__main__':
+    root = Tk()
+    root.title("XOr-2 с перегородкой")
+    root.geometry(f'250x120+{root.winfo_screenwidth() // 2 - 125}+{root.winfo_screenheight() // 2 - 60}')
+    root.bind("<Return>", button_clicked1)
+
+    n_label = Label(text='Количество вершин: ')
+    n_entry = Entry()
+
+    btn = Button(text="Решить", command=button_clicked)
+
+    n_label.pack()
+    n_entry.pack()
+    btn.pack()
+
+    root.mainloop()
+    # n = int(input('Количество вершин: '))
