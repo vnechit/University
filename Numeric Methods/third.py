@@ -37,7 +37,7 @@ def gauss(t) -> str:
     nodes4answer = 0
     nodes3 = [
         [
-            -0.774596669,   #Xi
+            -0.774596669,   # Xi
             0,
             0.774596669,
         ],
@@ -61,9 +61,13 @@ def gauss(t) -> str:
             0.347854845
         ],
     ]
+    # Гаусс при 3-ех узлах
     for i in range(3):
+        # второй аргумент в функции это ui=(b-a)/2*xi + (b+a)/2
         nodes3answer += nodes3[1][i] * function(t, ((b-a) / 2 * nodes3[0][i] + (b + a) / 2))
+    # домножаем на константу (b - a) / 2 , вынесенную за знак суммы
     nodes3answer *= (b - a) / 2
+    # Гаусс при 4-ех узлах
     for i in range(4):
         nodes4answer += nodes4[1][i] * function(t, ((b - a) / 2 * nodes4[0][i] + (b + a) / 2))
     nodes4answer *= (b - a) / 2
